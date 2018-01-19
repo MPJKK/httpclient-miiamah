@@ -9,6 +9,12 @@ import {HttpClient} from '@angular/common/http';
 export class HttpTestComponent implements OnInit {
 
     tulos: string = 'Moi';
+    apitulos = 'Moi taas';
+    pistetulos = '';
+    apiosoite = 'http://media.mw.metropolia.fi/wbma';
+    kuvaosoite = 'http://media.mw.metropolia.fi/wbma/uploads/';
+    pisteosoite = 'https://api.openchargemap.io/v2/';
+
 
     constructor(private http: HttpClient) {
     }
@@ -24,8 +30,24 @@ export class HttpTestComponent implements OnInit {
         });
     }
 
+    getFromApi() {
+        this.http.get(this.apiosoite + '/media').subscribe(data => {
+            console.log(data[0].filename);
+            this.apitulos = this.kuvaosoite + data[0].filename;
+        });
+    }
+
+    getFromPiste() {
+        this.http.get(this.pisteosoite + '/poi/?output=json&countrycode=FIN&maxresults=2').subscribe(data => {
+            console.log(data[0]);
+            this.pistetulos = data[0].ID;
+        });
+    }
+
     ngOnInit() {
         this.getJson();
+        this.getFromApi();
+        this.getFromPiste();
     }
 
 }
